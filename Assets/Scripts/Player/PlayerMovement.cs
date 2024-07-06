@@ -7,16 +7,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float climbingSpeed = 1;
 
     public Vector2 Velocity => rigidbody.velocity;
+    public float XInput => xInput;
 
     private Rigidbody2D rigidbody;
     private float xInput;
     private float yInput;
     private float defaultGravity;
+    private Submarine submarine;
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         defaultGravity = rigidbody.gravityScale;
+        submarine = Submarine.Instance;
     }
 
     private void Update()

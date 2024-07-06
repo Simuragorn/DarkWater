@@ -1,14 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private PlayerMovement playerMovement;
     public static Player Instance;
+
+    public float XInput => playerMovement.XInput;
     public bool IsOnLadder => isOnLadder;
     private bool isOnLadder;
+
+    public bool IsInteraction => isInteraction;
+    private bool isInteraction;
 
     private void Awake()
     {
@@ -32,5 +36,10 @@ public class Player : MonoBehaviour
         {
             isOnLadder = false;
         }
+    }
+
+    private void Update()
+    {
+        isInteraction = Input.GetKey(KeyCode.E);
     }
 }
