@@ -15,6 +15,7 @@ public class Switcher : MonoBehaviour
     [SerializeField] private float gearDelay = 0.5f;
     [SerializeField] private float gearSupportDelay = 2f;
     [SerializeField] private float gearCheckingOffset = 0.001f;
+    [SerializeField] private float gizmosRadius = 0.05f;
 
     private float localXStartPosition;
     private float minLocalXPosition;
@@ -52,6 +53,19 @@ public class Switcher : MonoBehaviour
         switchValue = MathHelper.MapValue(xPosition, minLocalXPosition, maxLocalXPosition, -1, 1);
 
         previousGearPosition = GetCurrentGear();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+
+        var minLocalPosition = transform.localPosition;
+        minLocalPosition.x -= xOffset;
+        var maxLocalPosition = transform.localPosition;
+        maxLocalPosition.x += xOffset;
+
+        Gizmos.DrawWireSphere(transform.parent.TransformPoint(minLocalPosition), gizmosRadius);
+        Gizmos.DrawWireSphere(transform.parent.TransformPoint(maxLocalPosition), gizmosRadius);
     }
 
     private GearEnum? GetCurrentGear()
