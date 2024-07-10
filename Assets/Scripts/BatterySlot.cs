@@ -1,18 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class BatterySlot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private bool isCharger;
+    [SerializeField] private Transform batteryPosition;
+    private Battery currentBattery;
 
-    // Update is called once per frame
-    void Update()
+    public Transform BatteryPosition => batteryPosition;
+
+    public bool CanBeUsedForBattery => currentBattery == null;
+
+    public bool IsCharger => isCharger;
+
+    public void ConnectBattery(Battery battery)
     {
-        
+        currentBattery = battery;
+    }
+    public void DisconnectBattery()
+    {
+        currentBattery = null;
     }
 }

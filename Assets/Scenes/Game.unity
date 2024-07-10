@@ -3935,7 +3935,7 @@ Transform:
   - {fileID: 199851609}
   - {fileID: 1579890293}
   - {fileID: 1160650487}
-  - {fileID: 1619402322}
+  - {fileID: 1761927177}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1678282734
@@ -4029,6 +4029,38 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: -2.7098024, y: 0.046866298, z: 0}
     m_Extent: {x: 0.08560872, y: 0.54869723, z: 0}
+--- !u!1 &1761927176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1761927177}
+  m_Layer: 0
+  m_Name: Batteries
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1761927177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761927176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1619402322}
+  m_Father: {fileID: 1678282733}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1806783491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4757,7 +4789,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1678282733}
+    m_TransformParent: {fileID: 1761927177}
     m_Modifications:
     - target: {fileID: 3867474588186194756, guid: d2dee95cda82880448bbcef98bfbd027, type: 3}
       propertyPath: m_Name
@@ -4765,11 +4797,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7463062491054782169, guid: d2dee95cda82880448bbcef98bfbd027, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.583
+      value: 0.645
       objectReference: {fileID: 0}
     - target: {fileID: 7463062491054782169, guid: d2dee95cda82880448bbcef98bfbd027, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.251
+      value: -0.24999997
       objectReference: {fileID: 0}
     - target: {fileID: 7463062491054782169, guid: d2dee95cda82880448bbcef98bfbd027, type: 3}
       propertyPath: m_LocalPosition.z

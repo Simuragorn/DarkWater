@@ -4,17 +4,19 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PickingObject : MonoBehaviour
 {
-    [SerializeField] private int pickingDisplayOrder = 60;
+    [SerializeField] protected int pickingDisplayOrder = 60;
     protected int defaultDisplayOrder;
     protected float posYOffset;
     protected bool isPickedUp;
     protected Collider2D pickingCollider;
     protected SpriteRenderer spriteRenderer;
+    private Transform container;
     protected virtual void Awake()
     {
         pickingCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         defaultDisplayOrder = spriteRenderer.sortingOrder;
+        container = transform.parent;
     }
 
     public bool CanBePickedUp => !isPickedUp;
@@ -33,7 +35,7 @@ public class PickingObject : MonoBehaviour
         Vector2 newPosition = transform.position;
         newPosition.y = transform.position.y + posYOffset;
         transform.position = newPosition;
-        transform.parent = Submarine.Instance.transform;
+        transform.parent = container;
         spriteRenderer.sortingOrder = defaultDisplayOrder;
         isPickedUp = false;
     }

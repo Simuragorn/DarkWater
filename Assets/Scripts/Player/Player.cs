@@ -1,16 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    private enum PickingActionEnum
-    {
-        None,
-        Pick,
-        Drop,
-    }
-
     [SerializeField] private Transform pickingContainer;
     [SerializeField] private PlayerMovement playerMovement;
     public static Player Instance;
@@ -21,8 +16,8 @@ public class Player : MonoBehaviour
 
     public bool IsInteraction => isInteraction;
     private bool isInteraction;
-    private PickingActionEnum pickingAction = PickingActionEnum.None;
     private PickingObject pickedObject;
+    private List<PickingObject> objectsForPicking = new List<PickingObject>();
 
     private void Awake()
     {
@@ -39,6 +34,12 @@ public class Player : MonoBehaviour
         {
             isClimbing = true;
         }
+
+        var newObject = collision.GetComponent<PickingObject>();
+        if (newObject!=null && !objectsForPicking.Contains(newObject))
+        {
+            objectsForPicking.Add(newObject);
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -46,52 +47,40 @@ public class Player : MonoBehaviour
         {
             isClimbing = false;
         }
+
+        var newObject = collision.GetComponent<PickingObject>();
+        if (newObject!=null && objectsForPicking.Contains(newObject))
+        {
+            objectsForPicking.Remove(newObject);
+        }
     }
 
     private void Update()
     {
         isInteraction = Input.GetKey(KeyCode.Space);
-        DefinePickingAction();
+        HandlePicking();
 
     }
 
-    private void DefinePickingAction()
+    private void HandlePicking()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (pickingAction == PickingActionEnum.None && pickedObject != null && !isClimbing)
+            if (pickedObject != null && !isClimbing)
             {
-                pickingAction = PickingActionEnum.Drop;
-            }
-            else if (pickedObject == null && !isClimbing)
-            {
-                pickingAction = PickingActionEnum.Pick;
-            }
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        switch (pickingAction)
-        {
-            case PickingActionEnum.None:
-                break;
-            case PickingActionEnum.Pick:
-                var battery = collision.GetComponent<PickingObject>();
-                if (battery != null && battery.CanBePickedUp)
-                {
-                    battery.PickUp(pickingContainer);
-                    pickedObject = battery;
-                }
-                break;
-            case PickingActionEnum.Drop:
                 pickedObject.Drop();
                 pickedObject = null;
-                break;
-            default:
-                break;
+            }
+            else if (pickedObject == null && objectsForPicking.Any() && !isClimbing)
+            {
+                var suitableObjects = objectsForPicking.Where(o => o.CanBePickedUp).ToList();
+                var newObject = suitableObjects.OrderBy(o => Vector2.Distance(o.transform.position, transform.position)).FirstOrDefault();
+                if (newObject != null)
+                {
+                    newObject.PickUp(pickingContainer);
+                    pickedObject = newObject;
+                }
+            }
         }
-        pickingAction = PickingActionEnum.None;
-
     }
 }
