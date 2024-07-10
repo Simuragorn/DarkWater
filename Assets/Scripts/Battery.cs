@@ -21,7 +21,7 @@ public class Battery : PickingObject
 
     public override void Drop()
     {
-        var suitableSlots = batterySlots.Where(bs => bs.CanBeUsedForBattery).ToList();
+        var suitableSlots = batterySlots.Where(bs => !bs.IsBatteryConnected).ToList();
         var newSlot = suitableSlots.OrderBy(o => Vector2.Distance(o.transform.position, transform.position)).FirstOrDefault();
         if (newSlot != null)
         {

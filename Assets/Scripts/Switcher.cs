@@ -1,8 +1,9 @@
 using Assets.Scripts.Helpers;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Switcher : MonoBehaviour
+public class Switcher : PluggableObject
 {
     public enum GearEnum
     {
@@ -43,6 +44,10 @@ public class Switcher : MonoBehaviour
         minLocalXPosition = localXStartPosition - xOffset;
         maxLocalXPosition = localXStartPosition + xOffset;
         defaultRigidbodyContraints = rigidbody.constraints;
+        if (!isConnected)
+        {
+            BlockMovement();
+        }
     }
 
     private void FixedUpdate()
@@ -66,6 +71,17 @@ public class Switcher : MonoBehaviour
 
         Gizmos.DrawWireSphere(transform.parent.TransformPoint(minLocalPosition), gizmosRadius);
         Gizmos.DrawWireSphere(transform.parent.TransformPoint(maxLocalPosition), gizmosRadius);
+    }
+
+    protected override void Slot_OnBatteryDisconnected(object sender, EventArgs e)
+    {
+        base.Slot_OnBatteryDisconnected(sender, e);
+        BlockMovement();
+    }
+    protected override void Slot_OnBatteryConnected(object sender, EventArgs e)
+    {
+        base.Slot_OnBatteryConnected(sender, e);
+        UnblockMovement();
     }
 
     private GearEnum? GetCurrentGear()
@@ -136,18 +152,27 @@ public class Switcher : MonoBehaviour
                     break;
             }
             transform.localPosition = localPosition;
-
-            rigidbody.constraints = defaultRigidbodyContraints | RigidbodyConstraints2D.FreezePositionX;
+            BlockMovement();
             gearDelayLeft = gearDelay;
             gearSupportDelayLeft = gearSupportDelay;
             Debug.Log(gearText);
         }
-        else if (gearDelayLeft <= 0)
+        else if (gearDelayLeft <= 0 && isConnected)
         {
-            rigidbody.constraints = defaultRigidbodyContraints;
+            UnblockMovement();
         }
 
         return localPosition;
+    }
+
+    private void UnblockMovement()
+    {
+        rigidbody.constraints = defaultRigidbodyContraints;
+    }
+
+    private void BlockMovement()
+    {
+        rigidbody.constraints = defaultRigidbodyContraints | RigidbodyConstraints2D.FreezePositionX;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
