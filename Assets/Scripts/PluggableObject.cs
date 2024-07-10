@@ -3,7 +3,7 @@ using UnityEngine;
 public class PluggableObject : MonoBehaviour
 {
     protected BatterySlot batterySlot;
-    protected bool isConnected => batterySlot.IsBatteryConnected;
+    protected bool isConnected => batterySlot != null && batterySlot.IsBatteryConnected;
     public void SetSlot(BatterySlot slot)
     {
         if (batterySlot != null)
