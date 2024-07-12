@@ -12,27 +12,31 @@ public class PluggableLight : PluggableObject
     {
         lightSource = GetComponent<Light2D>();
         maxIntesity = lightSource.intensity;
-        if (!isConnected)
+        if (!hasPowerSupply)
         {
             lightSource.intensity = 0;
         }
     }
-
     private void Update()
     {
-        int sign = isConnected ? 1 : -1;
+        UpdateIntensity();
+    }
+
+    private void UpdateIntensity()
+    {
+        int sign = hasPowerSupply ? 1 : -1;
         float newIntensity = lightSource.intensity + sign * Time.deltaTime * changingIntensitySpeed;
         newIntensity = Math.Clamp(newIntensity, 0, maxIntesity);
         lightSource.intensity = newIntensity;
     }
 
-    protected override void Slot_OnBatteryConnected(object sender, EventArgs e)
+    protected override void Slot_OnPowerConnected(object sender, EventArgs e)
     {
-        base.Slot_OnBatteryConnected(sender, e);
+        base.Slot_OnPowerConnected(sender, e);
     }
 
-    protected override void Slot_OnBatteryDisconnected(object sender, EventArgs e)
+    protected override void Slot_OnPowerDisconnected(object sender, EventArgs e)
     {
-        base.Slot_OnBatteryDisconnected(sender, e);
+        base.Slot_OnPowerDisconnected(sender, e);
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Consts;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +7,32 @@ using UnityEngine;
 public class BatterySlot : MonoBehaviour
 {
     [SerializeField] private bool isCharger;
+    [SerializeField] private float chargingTimeInSeconds = 5;
+    [SerializeField] private float dischargingTimeInSeconds = 20;
+
     [SerializeField] private Transform batteryPosition;
     [SerializeField] private List<PluggableObject> pluggedObjects;
     private Battery currentBattery;
 
-    public event EventHandler OnBatteryConnected;
-    public event EventHandler OnBatteryDisconnected;
+    public event EventHandler OnPowerConnected;
+    public event EventHandler OnPowerDisconnected;
 
     public Transform BatteryPosition => batteryPosition;
 
+    private float chargingSpeed;
+    private float dischargingSpeed;
+    public float ChargingSpeed => chargingSpeed;
+    public float DischargingSpeed => dischargingSpeed;
+
     public bool IsBatteryConnected => currentBattery != null;
+    public bool IsChargedBatteryConnected => currentBattery != null && currentBattery.IsCharged;
 
     public bool IsCharger => isCharger;
 
     private void Awake()
     {
+        chargingSpeed = PowerConstants.MaxBatteryPowerLevel / chargingTimeInSeconds;
+        dischargingSpeed = PowerConstants.MaxBatteryPowerLevel / dischargingTimeInSeconds;
         if (pluggedObjects == null)
         {
             pluggedObjects = new List<PluggableObject>();
@@ -34,11 +46,29 @@ public class BatterySlot : MonoBehaviour
     public void ConnectBattery(Battery battery)
     {
         currentBattery = battery;
-        OnBatteryConnected?.Invoke(this, EventArgs.Empty);
+        battery.OnCharged += Battery_OnCharged;
+        battery.OnDischarged += Battery_OnDischarged;
+        if (battery.IsCharged)
+        {
+            OnPowerConnected?.Invoke(this, EventArgs.Empty);
+        }
     }
+
+    private void Battery_OnDischarged(object sender, EventArgs e)
+    {
+        OnPowerDisconnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Battery_OnCharged(object sender, EventArgs e)
+    {
+        OnPowerConnected?.Invoke(this, EventArgs.Empty);
+    }
+
     public void DisconnectBattery()
     {
+        currentBattery.OnCharged -= Battery_OnCharged;
+        currentBattery.OnDischarged -= Battery_OnDischarged;
         currentBattery = null;
-        OnBatteryDisconnected?.Invoke(this, EventArgs.Empty);
+        OnPowerDisconnected?.Invoke(this, EventArgs.Empty);
     }
 }

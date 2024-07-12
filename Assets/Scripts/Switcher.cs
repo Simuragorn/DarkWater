@@ -44,7 +44,7 @@ public class Switcher : PluggableObject
         minLocalXPosition = localXStartPosition - xOffset;
         maxLocalXPosition = localXStartPosition + xOffset;
         defaultRigidbodyContraints = rigidbody.constraints;
-        if (!isConnected)
+        if (!hasPowerSupply)
         {
             BlockMovement();
         }
@@ -73,14 +73,14 @@ public class Switcher : PluggableObject
         Gizmos.DrawWireSphere(transform.parent.TransformPoint(maxLocalPosition), gizmosRadius);
     }
 
-    protected override void Slot_OnBatteryDisconnected(object sender, EventArgs e)
+    protected override void Slot_OnPowerDisconnected(object sender, EventArgs e)
     {
-        base.Slot_OnBatteryDisconnected(sender, e);
+        base.Slot_OnPowerDisconnected(sender, e);
         BlockMovement();
     }
-    protected override void Slot_OnBatteryConnected(object sender, EventArgs e)
+    protected override void Slot_OnPowerConnected(object sender, EventArgs e)
     {
-        base.Slot_OnBatteryConnected(sender, e);
+        base.Slot_OnPowerConnected(sender, e);
         UnblockMovement();
     }
 
@@ -157,7 +157,7 @@ public class Switcher : PluggableObject
             gearSupportDelayLeft = gearSupportDelay;
             Debug.Log(gearText);
         }
-        else if (gearDelayLeft <= 0 && isConnected)
+        else if (gearDelayLeft <= 0 && hasPowerSupply)
         {
             UnblockMovement();
         }
