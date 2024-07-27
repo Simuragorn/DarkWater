@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class BatterySlot : MonoBehaviour
 {
+    [SerializeField] private GameObject chargingEffects;
     [SerializeField] private bool isCharger;
     [SerializeField] private float chargingTimeInSeconds = 5;
     [SerializeField] private float dischargingTimeInSeconds = 20;
@@ -41,6 +42,19 @@ public class BatterySlot : MonoBehaviour
         {
             pluggedObject.SetSlot(this);
         }
+        chargingEffects.SetActive(false);
+    }
+
+    private void Battery_OnDischarged(object sender, EventArgs e)
+    {
+        chargingEffects.SetActive(false);
+        OnPowerDisconnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Battery_OnCharged(object sender, EventArgs e)
+    {
+        chargingEffects.SetActive(true);
+        OnPowerConnected?.Invoke(this, EventArgs.Empty);
     }
 
     public void ConnectBattery(Battery battery)
@@ -50,18 +64,9 @@ public class BatterySlot : MonoBehaviour
         battery.OnDischarged += Battery_OnDischarged;
         if (battery.IsCharged)
         {
+            chargingEffects.SetActive(true);
             OnPowerConnected?.Invoke(this, EventArgs.Empty);
         }
-    }
-
-    private void Battery_OnDischarged(object sender, EventArgs e)
-    {
-        OnPowerDisconnected?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void Battery_OnCharged(object sender, EventArgs e)
-    {
-        OnPowerConnected?.Invoke(this, EventArgs.Empty);
     }
 
     public void DisconnectBattery()
@@ -69,6 +74,8 @@ public class BatterySlot : MonoBehaviour
         currentBattery.OnCharged -= Battery_OnCharged;
         currentBattery.OnDischarged -= Battery_OnDischarged;
         currentBattery = null;
+
+        chargingEffects.SetActive(false);
         OnPowerDisconnected?.Invoke(this, EventArgs.Empty);
     }
 }
