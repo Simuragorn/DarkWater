@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Player
   - SubmarineInnerBody
-  - 
-  - 
+  - Creature
+  - RadarMap
   - 
   - 
   - 
@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3436206519
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Radar
+    uniqueID: 3950698867
     locked: 0
