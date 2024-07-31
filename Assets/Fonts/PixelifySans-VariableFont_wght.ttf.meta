@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a80979f102ff0b84fa0b0a6a681eec0e
+guid: 48c442a072df01141b9f639e965d73d6
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - PixelArmy
+  - Pixelify Sans
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

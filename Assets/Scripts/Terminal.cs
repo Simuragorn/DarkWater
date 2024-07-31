@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public class Terminal : PluggableObject
 {
+    [SerializeField] private float printingTextDelay = 1.5f;
+    [SerializeField] private Radar radar;
     [SerializeField] private Transform terminalPanel;
     [SerializeField] private TextMeshProUGUI terminalText;
     [SerializeField] private TMP_InputField terminalInput;
@@ -15,6 +18,15 @@ public class Terminal : PluggableObject
     private const string InfoMenuName = "Info";
     private const string MenuName = "Menu";
     private const string MenuQuickName = "Q";
+
+    private const string MenuText = @"
+Menu:
+- Tasks
+- Bestiary
+- Radar
+- Info";
+
+    private Coroutine currentPrintingCoroutine;
 
     private void Awake()
     {
@@ -42,37 +54,60 @@ public class Terminal : PluggableObject
                 return;
             }
             userInput = userInput.Trim();
-            if (userInput.Equals(TasksMenuName, StringComparison.InvariantCultureIgnoreCase))
+            if (TasksMenuName.StartsWith(userInput, StringComparison.InvariantCultureIgnoreCase))
             {
-                terminalText.text = "No current tasks";
+                PrintText("No current tasks available.");
             }
-            else if (userInput.Equals(BestiaryMenuName, StringComparison.InvariantCultureIgnoreCase))
+            else if (BestiaryMenuName.StartsWith(userInput, StringComparison.InvariantCultureIgnoreCase))
             {
-                terminalText.text = "List of beasts: ...";
+                PrintText("List of beasts: ...");
             }
-            else if (userInput.Equals(RadarMenuName, StringComparison.InvariantCultureIgnoreCase))
+            else if (RadarMenuName.StartsWith(userInput, StringComparison.InvariantCultureIgnoreCase))
             {
-                terminalText.text = "Trying to restart radar";
+                bool isSuccess = radar.TryStartScanning();
+                if (isSuccess)
+                {
+                    PrintText("Radar has restared.");
+                }
+                else
+                {
+                    PrintText("Radar is reloading.");
+                }
             }
-            else if (userInput.Equals(InfoMenuName, StringComparison.InvariantCultureIgnoreCase))
+            else if (InfoMenuName.StartsWith(userInput, StringComparison.InvariantCultureIgnoreCase))
             {
-                terminalText.text = @"You are 100 meters below sea level.";
+                PrintText(@"You are 100 meters below sea level.");
             }
-            else if (userInput.Equals(MenuName, StringComparison.InvariantCultureIgnoreCase) || userInput.Equals(MenuQuickName, StringComparison.InvariantCultureIgnoreCase))
+            else if (MenuName.StartsWith(userInput, StringComparison.InvariantCultureIgnoreCase) || userInput.Equals(MenuQuickName, StringComparison.InvariantCultureIgnoreCase))
             {
-                terminalText.text = @"
-Menu:
-- Tasks
-- Bestiary
-- Radar
-- Info";
+                PrintText(MenuText);
             }
             else
             {
-                terminalText.text = "Unknown command";
+                PrintText("Unknown command.");
             }
             terminalInput.text = string.Empty;
             terminalInput.ActivateInputField();
+        }
+    }
+
+    private void PrintText(string text)
+    {
+        if (currentPrintingCoroutine != null)
+        {
+            StopCoroutine(currentPrintingCoroutine);
+        }
+        currentPrintingCoroutine = StartCoroutine(PrintingCoroutine(text));
+    }
+
+    private IEnumerator PrintingCoroutine(string text)
+    {
+        terminalText.text = string.Empty;
+        float letterDelay = printingTextDelay / Mathf.Max(text.Length, 1);
+        foreach (char letter in text)
+        {
+            yield return new WaitForSeconds(letterDelay);
+            terminalText.text += letter;
         }
     }
 
@@ -109,5 +144,6 @@ Menu:
     {
         terminalPanel.gameObject.SetActive(true);
         terminalInput.ActivateInputField();
+        PrintText(MenuText);
     }
 }

@@ -3116,8 +3116,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
-  m_sharedMaterial: {fileID: 2738269061857564232, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
+  m_sharedMaterial: {fileID: 5102165436809887835, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5133,6 +5133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f5bcfdc32ec9544b49c037f506abc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radarReloadingTime: 10
   radarCamera: {fileID: 1165896517}
   pointColor: {r: 1, g: 0, b: 0, a: 1}
   targetLayerMask:
@@ -7510,7 +7511,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 0
-  m_GlobalFontAsset: {fileID: 11400000, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -8313,8 +8314,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
-  m_sharedMaterial: {fileID: 2738269061857564232, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
+  m_sharedMaterial: {fileID: 5102165436809887835, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8455,8 +8456,8 @@ MonoBehaviour:
 
     - Info'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
-  m_sharedMaterial: {fileID: 2738269061857564232, guid: e5b26223b6eaf4644ba0da4fbe4192ca, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
+  m_sharedMaterial: {fileID: 5102165436809887835, guid: 0e7ba65999277f845b4749142a02ff06, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10135,6 +10136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a662a816ed47a4f9ac481a539d3e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  printingTextDelay: 1
+  radar: {fileID: 1088728002}
   terminalPanel: {fileID: 1315707636}
   terminalText: {fileID: 1873002496}
   terminalInput: {fileID: 1709315925}

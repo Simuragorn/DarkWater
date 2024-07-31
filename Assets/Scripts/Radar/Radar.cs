@@ -1,9 +1,11 @@
 using Assets.Scripts.Utils;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Radar : PluggableObject
 {
+    [SerializeField] private float radarReloadingTime = 10;
     [SerializeField] private Camera radarCamera;
     [SerializeField] private Color pointColor = Color.red;
     [SerializeField] private LayerMask targetLayerMask;
@@ -13,16 +15,62 @@ public class Radar : PluggableObject
     [SerializeField] private float radarDistance = 5;
 
     private List<Collider2D> collidersList = new();
+    private float scanDurationTime;
+    private float scanDurationLeft = 0;
+
+    private float radarReloadingTimeLeft = 0;
+
+    private void Awake()
+    {
+        scanDurationTime = 360 / rotationSpeed;
+        StopScanning();
+    }
 
     private void Update()
     {
         HandleScanning();
     }
 
+    protected override void Slot_OnPowerDisconnected(object sender, EventArgs e)
+    {
+        base.Slot_OnPowerDisconnected(sender, e);
+        StopScanning();
+    }
+
+    public bool TryStartScanning()
+    {
+        if (radarReloadingTimeLeft <= 0)
+        {
+            StartScanning();
+            return true;
+        }
+        return false;
+    }
+
+    private void StartScanning()
+    {
+        radarReloadingTimeLeft = radarReloadingTime;
+        scanDurationLeft = scanDurationTime;
+        sweepTransform.gameObject.SetActive(true);
+    }
+
+    private void StopScanning()
+    {
+        scanDurationLeft = 0;
+        sweepTransform.gameObject.SetActive(false);
+    }
+
     private void HandleScanning()
     {
-        if (!hasPowerSupply)
+        bool scanningWasActive = scanDurationLeft > 0;
+        scanDurationLeft = Math.Max(scanDurationLeft - Time.deltaTime, 0);
+        radarReloadingTimeLeft = Math.Max(radarReloadingTimeLeft - Time.deltaTime, 0);
+        if (!hasPowerSupply || scanDurationLeft <= 0)
         {
+            if (scanningWasActive)
+            {
+                StopScanning();
+            }
             return;
         }
 
