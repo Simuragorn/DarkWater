@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float xVelocity = xInput * movementSpeed;
         float yVelocity = rigidbody.velocity.y;
         if (Player.Instance.IsOnLadder)
         {
@@ -40,6 +41,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidbody.gravityScale = defaultGravity;
         }
-        rigidbody.velocity = new Vector2(xInput * movementSpeed, yVelocity);
+        if (Player.Instance.IsOnTerminal)
+        {
+            xVelocity = 0;
+        }
+
+        rigidbody.velocity = new Vector2(xVelocity, yVelocity);
     }
 }

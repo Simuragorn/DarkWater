@@ -100,8 +100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26656587c60987549a383fa937f9bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargingEffects: {fileID: 0}
   isCharger: 0
+  chargingTimeInSeconds: 5
+  dischargingTimeInSeconds: 99999
   batteryPosition: {fileID: 2285608615058048122}
+  pluggedObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!61 &3457288838688000157
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -134,7 +142,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0035010576, y: 0.17856002}
+  m_Offset: {x: -0.008084416, y: 0.17856002}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -145,7 +153,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.55405164, y: 0.5750589}
+  m_Size: {x: 0.4, y: 0.5750589}
   m_EdgeRadius: 0
 --- !u!50 &7248981596909145018
 Rigidbody2D:

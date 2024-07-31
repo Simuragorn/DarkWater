@@ -1,9 +1,8 @@
 using Assets.Scripts.Utils;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Radar : MonoBehaviour
+public class Radar : PluggableObject
 {
     [SerializeField] private Camera radarCamera;
     [SerializeField] private Color pointColor = Color.red;
@@ -17,6 +16,16 @@ public class Radar : MonoBehaviour
 
     private void Update()
     {
+        HandleScanning();
+    }
+
+    private void HandleScanning()
+    {
+        if (!hasPowerSupply)
+        {
+            return;
+        }
+
         float previousRotation = (sweepTransform.eulerAngles.z % 360) - 180;
         sweepTransform.eulerAngles += new Vector3(0, 0, -rotationSpeed * Time.deltaTime);
         float currentRotation = (sweepTransform.eulerAngles.z % 360) - 180;

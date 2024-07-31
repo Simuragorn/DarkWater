@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Battery : PickingObject
 {
+    [SerializeField] private float initialPowerLevel = 100;
     [SerializeField] private TextMeshProUGUI powerText;
     public bool IsCharged => currentPowerLevel > 0;
     public event EventHandler OnCharged;
@@ -15,6 +16,12 @@ public class Battery : PickingObject
     private List<BatterySlot> batterySlots = new List<BatterySlot>();
     BatterySlot currentSlot;
     private float currentPowerLevel;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        currentPowerLevel = initialPowerLevel;
+    }
 
     private void Update()
     {
