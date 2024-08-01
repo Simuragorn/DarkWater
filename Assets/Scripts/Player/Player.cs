@@ -97,12 +97,17 @@ public class Player : MonoBehaviour
         if (!isOnTerminal && availableTerminal != null && Input.GetKeyDown(KeyCode.E))
         {
             isOnTerminal = availableTerminal.TryOpenTerminal();
+            if (isOnTerminal)
+            {
+                availableTerminal.OnClosed += AvailableTerminal_OnClosed;
+            }
         }
-        else if (isOnTerminal && Input.GetKeyDown(KeyCode.Escape))
-        {
-            isOnTerminal = false;
-            availableTerminal.CloseTerminal();
-        }
+    }
+
+    private void AvailableTerminal_OnClosed(object sender, System.EventArgs e)
+    {
+        isOnTerminal = false;
+        availableTerminal.OnClosed -= AvailableTerminal_OnClosed;
     }
 
     private void HandlePicking()

@@ -10,6 +10,8 @@ public class Terminal : PluggableObject
     [SerializeField] private Transform terminalPanel;
     [SerializeField] private TextMeshProUGUI terminalText;
     [SerializeField] private TMP_InputField terminalInput;
+
+    public event EventHandler OnClosed;
     private bool isActive => terminalPanel.gameObject.activeInHierarchy;
 
     private const string TasksMenuName = "Tasks";
@@ -135,9 +137,10 @@ Menu:
         return false;
     }
 
-    public void CloseTerminal()
+    private void CloseTerminal()
     {
         terminalPanel.gameObject.SetActive(false);
+        OnClosed?.Invoke(this, EventArgs.Empty);
     }
 
     private void OpenTerminal()
