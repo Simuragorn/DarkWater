@@ -307,9 +307,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xOffset: 0.1
   gearDelay: 1
-  gearSupportDelay: 2
-  gearCheckingOffset: 0.001
+  gearCheckingOffset: 0.01
   gizmosRadius: 0.05
+  pushingVelocity: 0.05
   switchValue: 0
 --- !u!50 &67060826
 Rigidbody2D:
@@ -319,7 +319,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67060823}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -336,7 +336,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 6
 --- !u!61 &67060827
 BoxCollider2D:
@@ -9683,7 +9683,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086475530}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -9700,7 +9700,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 6
 --- !u!61 &2086475534
 BoxCollider2D:
@@ -9761,9 +9761,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xOffset: 0.06
   gearDelay: 1
-  gearSupportDelay: 2
-  gearCheckingOffset: 0.001
+  gearCheckingOffset: 0.01
   gizmosRadius: 0.05
+  pushingVelocity: 0.05
   switchValue: 0
 --- !u!1 &2094254389
 GameObject:

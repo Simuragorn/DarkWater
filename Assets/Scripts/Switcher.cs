@@ -14,9 +14,9 @@ public class Switcher : PluggableObject
 
     [SerializeField] private float xOffset = 1f;
     [SerializeField] private float gearDelay = 0.5f;
-    [SerializeField] private float gearSupportDelay = 2f;
-    [SerializeField] private float gearCheckingOffset = 0.001f;
+    [SerializeField] private float gearCheckingOffset = 0.01f;
     [SerializeField] private float gizmosRadius = 0.05f;
+    [SerializeField] private float pushingVelocity = 0.1f;
 
     private float localXStartPosition;
     private float minLocalXPosition;
@@ -26,12 +26,11 @@ public class Switcher : PluggableObject
     private Rigidbody2D rigidbody;
     private RigidbodyConstraints2D defaultRigidbodyContraints;
     private float gearDelayLeft = 0;
-    private float gearSupportDelayLeft = 0;
     private GearEnum? previousGearPosition;
 
 
     /// <summary>
-    /// Returns value from 0 to 1 of current switching position
+    /// Returns value from -1 to 1 of current switching position
     /// </summary>
     public float SwitchValue => switchValue;
     [SerializeField] private float switchValue;
@@ -50,14 +49,44 @@ public class Switcher : PluggableObject
         }
     }
 
+    private void Update()
+    {
+        gearDelayLeft = Mathf.Max(0, gearDelayLeft - Time.deltaTime);
+    }
+
     private void FixedUpdate()
     {
-        LimitMovement();
-        float xPosition = transform.localPosition.x;
-        xPosition = Mathf.Clamp(xPosition, minLocalXPosition, maxLocalXPosition);
-        switchValue = MathHelper.MapValue(xPosition, minLocalXPosition, maxLocalXPosition, -1, 1);
+        HandleMovement();
+        CalculateSwitchValue();
 
         previousGearPosition = GetCurrentGear();
+    }
+
+    private void CalculateSwitchValue()
+    {
+        GearEnum? currentGear = GetCurrentGear();
+        if (currentGear == null)
+        {
+            float xPosition = transform.localPosition.x;
+            xPosition = Mathf.Clamp(xPosition, minLocalXPosition, maxLocalXPosition);
+            switchValue = MathHelper.MapValue(xPosition, minLocalXPosition, maxLocalXPosition, -1, 1);
+            return;
+        }
+
+        switch (currentGear)
+        {
+            case GearEnum.Highest:
+                switchValue = 1;
+                break;
+            case GearEnum.Lowest:
+                switchValue = -1;
+                break;
+            case GearEnum.Neutral:
+                switchValue = 0;
+                break;
+            default:
+                break;
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -105,64 +134,61 @@ public class Switcher : PluggableObject
         return null;
     }
 
-    private void LimitMovement()
+    private void HandleMovement()
     {
-        Vector2 localPosition = transform.localPosition;
-        localPosition = HandleGearChanging(localPosition);
+        Vector2 newLocalPosition = transform.localPosition;
+        float movingDirection = GetMovingDirection();
+        newLocalPosition.x += movingDirection;
 
         if (gearDelayLeft > 0)
         {
             return;
         }
 
-        localPosition.x = Mathf.Clamp(localPosition.x, minLocalXPosition, maxLocalXPosition);
-        transform.localPosition = Vector2.Lerp(transform.localPosition, localPosition, Time.fixedDeltaTime * 10);
 
-        if ((rigidbody.velocity.x < 0 && transform.localPosition.x <= minLocalXPosition) ||
-            (rigidbody.velocity.x > 0 && transform.localPosition.x >= maxLocalXPosition))
-        {
-            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-        }
+        transform.localPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
+        newLocalPosition.x = Mathf.Clamp(newLocalPosition.x, minLocalXPosition, maxLocalXPosition);
+        rigidbody.MovePosition(transform.parent.TransformPoint(newLocalPosition));
+        HandleGearChanging();
     }
 
-    private Vector2 HandleGearChanging(Vector2 localPosition)
+    private float GetMovingDirection()
     {
-        gearDelayLeft = Mathf.Max(0, gearDelayLeft - Time.deltaTime);
-        gearSupportDelayLeft = Mathf.Max(0, gearSupportDelayLeft - Time.deltaTime);
+        if (!collider.isTrigger)
+        {
+            return Player.Instance.XInput;
+        }
+        return 0;
+    }
 
+    private void HandleGearChanging()
+    {
         GearEnum? currentGear = GetCurrentGear();
-        if (rigidbody.velocity.x != 0 && currentGear != null && previousGearPosition != currentGear && gearSupportDelayLeft <= 0)
+        if (currentGear != null && previousGearPosition != currentGear)
         {
             string gearText = "unknown gear";
             switch (currentGear.Value)
             {
                 case GearEnum.Highest:
-                    localPosition.x = minLocalXPosition;
                     gearText = "highest gear";
                     break;
                 case GearEnum.Neutral:
-                    localPosition.x = localXStartPosition;
                     gearText = "neutral gear";
                     break;
                 case GearEnum.Lowest:
-                    localPosition.x = maxLocalXPosition;
                     gearText = "lowest gear";
                     break;
                 default:
                     break;
             }
-            transform.localPosition = localPosition;
             BlockMovement();
             gearDelayLeft = gearDelay;
-            gearSupportDelayLeft = gearSupportDelay;
             Debug.Log(gearText);
         }
         else if (gearDelayLeft <= 0 && hasPowerSupply)
         {
             UnblockMovement();
         }
-
-        return localPosition;
     }
 
     private void UnblockMovement()

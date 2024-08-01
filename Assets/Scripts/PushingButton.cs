@@ -21,7 +21,7 @@ public class PushingButton : PluggableObject
     [SerializeField] private float positionDelay = 0.5f;
     [SerializeField] private float positionCheckingOffset = 0.001f;
     [SerializeField] private float gizmosRadius = 0.05f;
-    [SerializeField] private float pushingVelocity = 1f;
+    [SerializeField] private float pushingVelocity = 0.5f;
     [SerializeField] private DirectionEnum pushingDirection;
 
     private float startLocalXPosition;
@@ -49,6 +49,7 @@ public class PushingButton : PluggableObject
     private void FixedUpdate()
     {
         HandleMovement();
+        previousPosition = GetCurrentPosition();
     }
 
     private void OnDrawGizmosSelected()
@@ -101,7 +102,7 @@ public class PushingButton : PluggableObject
         newLocalPosition.x = Mathf.Clamp(newLocalPosition.x, min, max);
 
         rigidbody.MovePosition(transform.parent.TransformPoint(newLocalPosition));
-        HandlePositionChanging(newLocalPosition);
+        HandlePositionChanging();
     }
 
     private float GetMovingDirection()
@@ -117,7 +118,7 @@ public class PushingButton : PluggableObject
         return pushingDirection == DirectionEnum.FromLeftToRight ? -1 : 1;
     }
 
-    private Vector2 HandlePositionChanging(Vector2 localPosition)
+    private void HandlePositionChanging()
     {
         ButtonPositionEnum? currentPosition = GetCurrentPosition();
         if (currentPosition != null && previousPosition != currentPosition)
@@ -127,23 +128,17 @@ public class PushingButton : PluggableObject
             switch (currentPosition.Value)
             {
                 case ButtonPositionEnum.End:
-                    localPosition.x = endLocalXPosition;
                     positionText = "end position";
                     break;
                 case ButtonPositionEnum.Start:
-                    localPosition.x = startLocalXPosition;
                     positionText = "start position";
                     break;
                 default:
                     break;
             }
-            transform.localPosition = localPosition;
             positionDelayLeft = positionDelay;
             Debug.Log(positionText);
         }
-
-        previousPosition = currentPosition;
-        return localPosition;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
