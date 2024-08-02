@@ -23,6 +23,8 @@ public class SubmarineMotor : MonoBehaviour
         Vector2 verticalMovement = transform.up * currentBuoyancyValue;
         targetPos = targetPos + horizontalMovement + verticalMovement;
         float maxDistance = motorSpeed * Time.deltaTime * Mathf.Max(Mathf.Abs(currentMotorValue), Mathf.Abs(currentBuoyancyValue));
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, maxDistance);
+
+        //CONFLICTS WITH rigidbody.MovePosition
+        //transform.position = Vector2.MoveTowards(transform.position, targetPos, maxDistance);
     }
 }

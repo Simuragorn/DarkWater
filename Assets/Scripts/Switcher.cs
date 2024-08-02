@@ -58,7 +58,6 @@ public class Switcher : PluggableObject
     {
         HandleMovement();
         CalculateSwitchValue();
-
         previousGearPosition = GetCurrentGear();
     }
 
@@ -136,17 +135,14 @@ public class Switcher : PluggableObject
 
     private void HandleMovement()
     {
-        Vector2 newLocalPosition = transform.localPosition;
-        float movingDirection = GetMovingDirection();
-        newLocalPosition.x += movingDirection;
-
         if (gearDelayLeft > 0)
         {
             return;
         }
-
-
-        transform.localPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
+        Vector2 newLocalPosition = transform.localPosition;
+        float movingDirection = GetMovingDirection();
+        newLocalPosition.x += movingDirection;
+        newLocalPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
         newLocalPosition.x = Mathf.Clamp(newLocalPosition.x, minLocalXPosition, maxLocalXPosition);
         rigidbody.MovePosition(transform.parent.TransformPoint(newLocalPosition));
         HandleGearChanging();

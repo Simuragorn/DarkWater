@@ -83,12 +83,11 @@ public class PushingButton : PluggableObject
 
     private void HandleMovement()
     {
-        Vector2 newLocalPosition = transform.localPosition;
-
         if (positionDelayLeft > 0)
         {
             return;
         }
+        Vector2 newLocalPosition = transform.localPosition;        
         float movingDirection = GetMovingDirection();
         newLocalPosition.x += movingDirection;
         newLocalPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
@@ -148,7 +147,16 @@ public class PushingButton : PluggableObject
         {
             return;
         }
-        collider.isTrigger = !player.IsInteraction;
+        bool isSuitablePosition;
+        if (pushingDirection == DirectionEnum.FromLeftToRight)
+        {
+            isSuitablePosition = player.transform.position.x < transform.position.x;
+        }
+        else
+        {
+            isSuitablePosition = player.transform.position.x > transform.position.x;
+        }
+        collider.isTrigger = !player.IsInteraction || !isSuitablePosition;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
