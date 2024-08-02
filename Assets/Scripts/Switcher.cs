@@ -124,11 +124,11 @@ public class Switcher : PluggableObject
         }
         if (distanceToLeft <= gearCheckingOffset)
         {
-            return GearEnum.Highest;
+            return GearEnum.Lowest;
         }
         if (distanceToRight <= gearCheckingOffset)
         {
-            return GearEnum.Lowest;
+            return GearEnum.Highest;
         }
         return null;
     }
@@ -144,7 +144,7 @@ public class Switcher : PluggableObject
         newLocalPosition.x += movingDirection;
         newLocalPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
         newLocalPosition.x = Mathf.Clamp(newLocalPosition.x, minLocalXPosition, maxLocalXPosition);
-        rigidbody.MovePosition(transform.parent.TransformPoint(newLocalPosition));
+        transform.position = transform.parent.TransformPoint(newLocalPosition);
         HandleGearChanging();
     }
 

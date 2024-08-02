@@ -87,7 +87,7 @@ public class PushingButton : PluggableObject
         {
             return;
         }
-        Vector2 newLocalPosition = transform.localPosition;        
+        Vector2 newLocalPosition = transform.localPosition;
         float movingDirection = GetMovingDirection();
         newLocalPosition.x += movingDirection;
         newLocalPosition = Vector2.Lerp(transform.localPosition, newLocalPosition, Time.fixedDeltaTime * pushingVelocity);
@@ -99,8 +99,7 @@ public class PushingButton : PluggableObject
             max = startLocalXPosition;
         }
         newLocalPosition.x = Mathf.Clamp(newLocalPosition.x, min, max);
-
-        rigidbody.MovePosition(transform.parent.TransformPoint(newLocalPosition));
+        transform.position = transform.parent.TransformPoint(newLocalPosition);
         HandlePositionChanging();
     }
 
